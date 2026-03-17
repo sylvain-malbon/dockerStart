@@ -9,7 +9,20 @@ Tester les commandes de base dans le terminal :
 - docker ps
 ![alt text](image/03-ps.png)
 
+- docker images
+![alt text](image/04-images1.png)
 
+- docker run
+![alt text](image/05-run.png)
+
+- docker stop
+![alt text](image/06-stop.png)
+
+- docker pull
+![alt text](image/07-pull.png)
+
+- docker images
+![alt text](image/08-images2.png)
 
 
 
