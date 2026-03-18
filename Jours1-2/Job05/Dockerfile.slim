@@ -1,0 +1,23 @@
+# Slim multi-stage build (production image)
+
+FROM node:18 AS build
+WORKDIR /app
+
+# Install all deps and build
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# Final image: only production deps + built output
+FROM node:18-alpine AS prod
+WORKDIR /app
+
+COPY --from=build /app/package*.json ./
+RUN npm install --production
+
+COPY --from=build /app/dist ./dist
+
+EXPOSE 3000
+CMD ["npm", "start"]

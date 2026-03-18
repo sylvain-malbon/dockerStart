@@ -1,0 +1,8 @@
+FROM node:18
+WORKDIR /app
+COPY . .
+
+RUN npm install        # Installe TOUT
+RUN npm run build      # Build l'app
+
+CMD ["npm", "start"]
