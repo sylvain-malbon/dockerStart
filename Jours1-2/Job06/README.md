@@ -8,7 +8,9 @@ Ce dépôt contient une petite API Flask exposée dans un conteneur Docker.
 docker build -t flask-api:1.0 .
 ```
 
-![Build de l'image Docker](images/01_build.png)
+<div style="display: inline-block; border: 3px solid yellow; padding: 4px;">
+  <img src="images/01_build.png" alt="Build de l'image Docker" />
+</div>
 
 ## 2) Lancer le container
 
@@ -22,7 +24,9 @@ docker run -d -p 5000:5000 --name flask flask-api:1.0
 docker images | grep flask-api
 ```
 
-![Liste des images Docker](images/02_images.png)
+<div style="display: inline-block; border: 3px solid yellow; padding: 4px;">
+  <img src="images/02_images.png" alt="Liste des images Docker" />
+</div>
 
 ## 4) Tester l’API (GET)
 
@@ -31,7 +35,9 @@ Ouvre un navigateur sur :
 - `http://localhost:5000/`
 - `http://localhost:5000/api/users`
 
-![Réponse API dans le navigateur](images/03_browser.png)
+<div style="display: inline-block; border: 3px solid yellow; padding: 4px;">
+  <img src="images/03_api-response-GET.png" alt="Réponse API dans le navigateur (GET)" />
+</div>
 
 ## 5) Tester l’API (POST)
 
@@ -52,13 +58,19 @@ Réponse :
 }
 ```
 
+<div style="display: inline-block; border: 3px solid yellow; padding: 4px;">
+  <img src="images/06_api-response-POST.png" alt="Réponse API dans le navigateur (POST)" />
+</div>
+
 ## 6) (Optionnel) Vérifier que le container tourne
 
 ```bash
 docker ps
 ```
 
-![Container en cours d'exécution](images/04_docker_ps.png)
+<div style="display: inline-block; border: 3px solid yellow; padding: 4px;">
+  <img src="images/04_docker_ps.png" alt="Container en cours d'exécution" />
+</div>
 
 Cette capture montre le container `flask-api:1.0` en cours d’exécution et le mapping du port `5000`.
 
@@ -80,6 +92,10 @@ docker build -t flask-api:3.11-slim -f Dockerfile.prod .
 
 docker images | grep flask-api
 ```
+
+<div style="display: inline-block; border: 3px solid yellow; padding: 4px;">
+  <img src="images/05_comparaison-tailles.png" alt="Comparaison des tailles d'images Docker" />
+</div>
 
 ## 9) Rendu / GitHub
 
