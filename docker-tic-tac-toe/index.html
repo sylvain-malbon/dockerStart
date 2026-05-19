@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tic Tac Toe</title>
-<!-- Oui je sais ! Je vous ais interdit le style dans le code –>
+
 <style>
 body {
 font-family: Arial, sans-serif;
@@ -80,7 +80,7 @@ let gameActive = true;
 const statusDisplay = document.querySelector('.status');
 const cells = document.querySelectorAll('td');
 async function saveResults(winner) {
-const response = await fetch('/save', {
+const response = await fetch('/save.php', {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({ winner }),
