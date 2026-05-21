@@ -34,6 +34,10 @@ services:
       - "8082:80"
     volumes:
       - ./src:/var/www/html
+    environment:
+      - PHP_EXTENSIONS=pdo pdo_mysql
+    entrypoint: >
+      bash -c "apt-get update && apt-get install -y libzip-dev && docker-php-ext-install pdo pdo_mysql && apache2-foreground"
 
 volumes:
   db_data:
