@@ -69,6 +69,18 @@ La table doit toujours être présente après redémarrage.
 
 ---
 
+## Debug PHP : extensions manquantes
+
+Après le premier lancement, j'ai rencontré une erreur liée à l'absence de certaines extensions PHP (ex : `pdo_mysql`).
+
+Pour corriger rapidement sans reconstruire l'image, j'ai utilisé la directive `entrypoint` dans le `docker-compose.yml` pour installer dynamiquement les extensions nécessaires au démarrage du conteneur :
+
+![Debug extensions PHP via entrypoint](img/06_extensions-php_entrypoint-service-php.png)
+
+> J'aurais aussi pu corriger ce problème de façon plus pérenne en modifiant le `Dockerfile` pour inclure directement l'installation des extensions nécessaires.
+
+---
+
 ## Connexion à MySQL en ligne de commande
 
 ```bash
