@@ -1,0 +1,59 @@
+services:
+  db:
+    image: mysql:8
+    container_name: job08-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    image: node:20-alpine
+    container_name: job08-backend
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install --silent && npm run dev"
+    environment:
+      BACKEND_PORT: ${BACKEND_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "${BACKEND_PORT}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    image: node:18-alpine
+    container_name: job08-frontend
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install --silent && npm run dev -- --host 0.0.0.0"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "${FRONTEND_PORT}:5173"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

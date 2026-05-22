@@ -1,4 +1,7 @@
 <?php
+// Affiche les informations PHP
+phpinfo();
+
 $host = 'db'; // nom du service MySQL dans docker-compose
 $db   = 'lamp_demo';
 $user = 'dev';
@@ -12,11 +15,10 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
+// Test de connexion à MySQL
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
-    echo "<p>Connexion réussie à MySQL via PDO !</p>";
+    echo "<p style=\"background:#dfd;padding:8px;\">Connexion réussie à MySQL via PDO !</p>";
 } catch (PDOException $e) {
-    echo "<p>Erreur de connexion : " . $e->getMessage() . "</p>";
+    echo "<p style=\"background:#fdd;padding:8px;\">Erreur de connexion : " . htmlspecialchars($e->getMessage()) . "</p>";
 }
-
-// phpinfo(); // Décommente si tu veux afficher phpinfo

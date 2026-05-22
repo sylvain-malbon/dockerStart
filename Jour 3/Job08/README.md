@@ -84,3 +84,75 @@ npm run dev
 Cela démarre le serveur Vite (généralement sur le port 5173) et permet de tester la connexion avec le backend.
 
 ![Étape 6](./img/06_npm_run_dev_frontend.png)
+
+## Phase 3 — docker-compose.yml
+
+### 8. Service db (MySQL + healthcheck)
+
+Le service `db` utilise l'image `mysql:8`, un volume persistant et un healthcheck pour vérifier que MySQL est vraiment prêt.
+
+Points configurés :
+
+- image `mysql:8`
+- volume persistant `db_data:/var/lib/mysql`
+- healthcheck avec `mysqladmin ping -h localhost`
+- variables sensibles injectées depuis `.env`
+
+### 9. Service backend (Node 20 + hot reload)
+
+Le service `backend` est monté en bind mount et démarre en mode développement avec hot reload.
+
+Points configurés :
+
+- `build: ./backend`
+- `command: npm run dev`
+- bind mount `./backend:/app`
+- exclusion des modules `- /app/node_modules`
+- attente de la base via :
+  - `depends_on`
+  - `condition: service_healthy`
+
+### 10. Service frontend (Vite + polling Windows/WSL)
+
+Le service `frontend` lance Vite en mode dev avec accès réseau et polling activé pour Windows/WSL.
+
+Points configurés :
+
+- `build: ./frontend`
+- `command: npm run dev -- --host 0.0.0.0`
+- `CHOKIDAR_USEPOLLING=true`
+- bind mount `./frontend:/app`
+- exclusion des modules `- /app/node_modules`
+
+## Variables d'environnement
+
+Les paramètres sensibles et techniques sont externalisés dans `.env`.
+
+Clés utilisées :
+
+- `MYSQL_ROOT_PASSWORD`
+- `MYSQL_DATABASE`
+- `MYSQL_USER`
+- `MYSQL_PASSWORD`
+- `BACKEND_PORT`
+- `FRONTEND_PORT`
+- `DB_HOST`
+- `DB_PORT`
+
+Le fichier `.env.example` contient les mêmes clés sans valeurs sensibles.
+
+## Vérification de la stack
+
+Commandes principales :
+
+```sh
+docker compose up --build
+docker compose ps
+```
+
+Vérifications attendues :
+
+- `db` passe en statut healthy
+- le backend démarre après la base
+- le frontend est disponible sur le port 5173
+- la route backend `/db-test` répond correctement
