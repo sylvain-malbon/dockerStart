@@ -97,6 +97,7 @@ Points configurés :
 - volume persistant `db_data:/var/lib/mysql`
 - healthcheck avec `mysqladmin ping -h localhost`
 - variables sensibles injectées depuis `.env`
+- le fichier `.env` doit être créé à partir de `.env.example` avant le premier `docker compose up`
 
 ### 9. Service backend (Node 20 + hot reload)
 
@@ -104,8 +105,8 @@ Le service `backend` est monté en bind mount et démarre en mode développement
 
 Points configurés :
 
-- `build: ./backend`
-- `command: npm run dev`
+- image `node:20-alpine`
+- `command: sh -c "npm install --silent && npm run dev"`
 - bind mount `./backend:/app`
 - exclusion des modules `- /app/node_modules`
 - attente de la base via :
@@ -118,8 +119,8 @@ Le service `frontend` lance Vite en mode dev avec accès réseau et polling acti
 
 Points configurés :
 
-- `build: ./frontend`
-- `command: npm run dev -- --host 0.0.0.0`
+- image `node:20-alpine`
+- `command: sh -c "npm install --silent && npm run dev -- --host 0.0.0.0"`
 - `CHOKIDAR_USEPOLLING=true`
 - bind mount `./frontend:/app`
 - exclusion des modules `- /app/node_modules`
@@ -127,6 +128,8 @@ Points configurés :
 ## Variables d'environnement
 
 Les paramètres sensibles et techniques sont externalisés dans `.env`.
+
+Avant le premier lancement de la stack, créez le fichier `.env` à partir de `.env.example` et renseignez les valeurs de développement.
 
 Clés utilisées :
 
@@ -141,14 +144,15 @@ Clés utilisées :
 
 Le fichier `.env.example` contient les mêmes clés sans valeurs sensibles.
 
-## Vérification de la stack
+## Phase 4 — Tests Hot Reload
 
-Commandes principales :
+### 11. Lance la stack avec `docker compose up`
 
 ```sh
-docker compose up --build
-docker compose ps
+docker compose up
 ```
+
+![Étape 7 - docker compose up](./img/07_docker_compose_up.png)
 
 Vérifications attendues :
 
@@ -156,3 +160,15 @@ Vérifications attendues :
 - le backend démarre après la base
 - le frontend est disponible sur le port 5173
 - la route backend `/db-test` répond correctement
+
+### 12. Test du hot reload côté backend
+
+Après le lancement de la stack, je modifie le message retourné dans `backend/server.js`.
+
+Node détecte automatiquement le changement grâce à `node --watch` et redémarre le serveur sans intervention manuelle. Le redémarrage est visible dans les logs du conteneur backend.
+
+### 13. Test du hot reload côté frontend
+
+Je modifie ensuite un texte dans `frontend/src/App.jsx`.
+
+Vite détecte automatiquement le changement et rafraîchit la page dans le navigateur sans redémarrage manuel.

@@ -7,7 +7,7 @@ const port = process.env.BACKEND_PORT || 3000;
 
 // Route GET /
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from backend' });
+  res.json({ message: 'Hello from backend - watch test ultime' });
 });
 
 // Route GET /db-test
